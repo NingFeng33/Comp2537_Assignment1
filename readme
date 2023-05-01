@@ -26,7 +26,7 @@ and without the encryption key)
 
 - Notes:
 You should not store your mongodb username and password or your encryption secrets
-in your source code and in your git repo.
+in your source code and in your git repo.∏
  (again, we'll fix this later)
 
 v1.7 - Sessions - No Encryption

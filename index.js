@@ -44,7 +44,13 @@ app.use(session({
 ));
 
 app.get('/', (req, res) => {
-	res.send("<h1>Ning's Page</h1>");
+	res.send(`
+        <h1>Ning's Page</h1>
+        <ul>
+            <li><a href="/SignUp">Sign Up</a></li>
+            <li><a href="/login">Log in</a></li>
+        </ul>
+    `);
 });
 
 app.get('/nosql-injection', async (req,res) => {
@@ -109,12 +115,16 @@ app.post('/submitEmail', (req,res) => {
 });
 
 
-app.get('/createUser', (req,res) => {
+app.get('/SignUp', (req,res) => {
     var html = `
-    create user
+    Sign Up
     <form action='/submitUser' method='post'>
     <input name='username' type='text' placeholder='username'>
+	<br>
+	<input name = 'email' type='text' placeholder='email'>
+	<br>
     <input name='password' type='password' placeholder='password'>
+	<br>
     <button>Submit</button>
     </form>
     `;
@@ -123,8 +133,9 @@ app.get('/createUser', (req,res) => {
 
 
 app.get('/login', (req,res) => {
+	// res.render('login', { errorMessage: '' });
     var html = `
-    log in
+    Log in
     <form action='/loggingin' method='post'>
     <input name='username' type='text' placeholder='username'>
     <input name='password' type='password' placeholder='password'>
@@ -132,32 +143,45 @@ app.get('/login', (req,res) => {
     </form>
     `;
     res.send(html);
+	
 });
 
 app.post('/submitUser', async (req,res) => {
     var username = req.body.username;
+	var email = req.body.email;
     var password = req.body.password;
 
 	const schema = Joi.object(
 		{
 			username: Joi.string().alphanum().max(20).required(),
+			email: Joi.string().email().required(),
 			password: Joi.string().max(20).required()
 		});
 	
-	const validationResult = schema.validate({username, password});
+	const validationResult = schema.validate({username, email, password});
 	if (validationResult.error != null) {
 	   console.log(validationResult.error);
-	   res.redirect("/createUser");
+	   res.redirect("/SignUp");
 	   return;
    }
 
     var hashedPassword = await bcrypt.hash(password, saltRounds);
 	
-	await userCollection.insertOne({username: username, password: hashedPassword});
+	await userCollection.insertOne({username: username, email: email, password: hashedPassword});
 	console.log("Inserted user");
 
-    var html = "successfully created user";
-    res.send(html);
+    // var html = "successfully created user";
+    // res.send(html);
+	var html = `
+		<div>
+			<h1>Hello Ning</h1>
+			<img src='/pic2.png' style='width:500px;'>
+			<form action='/signOut' method='post'>
+			<button>Sign Out</button>
+			</form>
+		</div>
+		`;
+		res.send(html);
 });
 
 app.post('/loggingin', async (req,res) => {
@@ -190,7 +214,10 @@ app.post('/loggingin', async (req,res) => {
 		return;
 	}
 	else {
-		console.log("incorrect password");
+		// console.log("incorrect password");
+		const errorMessage = "Invalid email/password combination";
+    	console.log(errorMessage);
+    	res.render("login", { errorMessage });
 		res.redirect("/login");
 		return;
 	}
@@ -200,10 +227,11 @@ app.get('/loggedin', (req,res) => {
     if (!req.session.authenticated) {
         res.redirect('/login');
     }
-    var html = `
-    You are logged in!
-    `;
-    res.send(html);
+    // var html = `
+    // You are logged in!
+    // `;
+    // res.send(html);
+	res.redirect('/pic/1')
 });
 
 app.get('/logout', (req,res) => {
@@ -220,19 +248,55 @@ app.get('/pic/:id', (req,res) => {
     var pic = req.params.id;
 
     if (pic == 1) {
-        res.send("pic1: <img src='/pic1.png' style='width:500px;'>");
+        // 
+		var html = `
+    <div>
+		<h1>Hello Ning</h1>
+        <img src='/pic1.png' style='width:500px;'>
+        <form action='/signOut' method='post'>
+        <button>Sign Out</button>
+        </form>
+    </div>
+    `;
+    res.send(html);
     }
     else if (pic == 2) {
-        res.send("pic2: <img src='/pic2.png' style='width:500px;'>");
+        // res.send("pic2: <img src='/pic2.png' style='width:500px;'>");
+		var html = `
+		<div>
+			<h1>Hello Ning</h1>
+			<img src='/pic2.png' style='width:500px;'>
+			<form action='/signOut' method='post'>
+			<button>Sign Out</button>
+			</form>
+		</div>
+		`;
+		res.send(html);
     }
 	else if (pic == 3) {
-		res.send("pic3: <img src='/pic3.png' style='width:500px;'>");
+		// res.send("pic3: <img src='/pic3.png' style='width:500px;'>");
+		var html = `
+		<div>
+			<h1>Hello Ning</h1>
+			<img src='/pic3.png' style='width:500px;'>
+			<form action='/signOut' method='post'>
+			<button>Sign Out</button>
+			</form>
+		</div>
+		`;
+		res.send(html);
 	}
     else {
         res.send("Invalid pic id: "+ pic);
     }
 });
 
+app.post('/signout', (req, res) => {
+	// clear session and redirect to signup page
+	req.session.destroy(() => {
+	  res.redirect('/');
+	});
+  });
 
 app.use(express.static(__dirname + "/public"));
 
