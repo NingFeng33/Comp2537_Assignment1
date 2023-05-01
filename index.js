@@ -169,19 +169,64 @@ app.post('/submitUser', async (req,res) => {
 	
 	await userCollection.insertOne({username: username, email: email, password: hashedPassword});
 	console.log("Inserted user");
+	var randomNum = Math.floor(Math.random() * 3) + 1;
+  res.redirect('/pic/' + randomNum);
+});
 
+app.get('/pic/:id', (req, res) => {
+  var pic = req.params.id;
+
+  // Generate a random number between 1 and 3
+  var randomNum = Math.floor(Math.random() * 3) + 1;
+
+  if (pic == 1 || randomNum == 1) {
+    var html = `
+      <div>
+        <h1>Hello Ning</h1>
+        <img src='/pic1.png' style='width:500px;'>
+        <form action='/signOut' method='post'>
+          <button>Sign Out</button>
+        </form>
+      </div>
+    `;
+    res.send(html);
+  } else if (pic == 2 || randomNum == 2) {
+    var html = `
+      <div>
+        <h1>Hello Ning</h1>
+        <img src='/pic2.png' style='width:500px;'>
+        <form action='/signOut' method='post'>
+          <button>Sign Out</button>
+        </form>
+      </div>
+    `;
+    res.send(html);
+  } else if (pic == 3 || randomNum == 3) {
+    var html = `
+      <div>
+        <h1>Hello Ning</h1>
+        <img src='/pic3.png' style='width:500px;'>
+        <form action='/signOut' method='post'>
+          <button>Sign Out</button>
+        </form>
+      </div>
+    `;
+    res.send(html);
+  } else {
+    res.send('Invalid pic id: ' + pic);
+  }
     // var html = "successfully created user";
     // res.send(html);
-	var html = `
-		<div>
-			<h1>Hello Ning</h1>
-			<img src='/pic2.png' style='width:500px;'>
-			<form action='/signOut' method='post'>
-			<button>Sign Out</button>
-			</form>
-		</div>
-		`;
-		res.send(html);
+	// var html = `
+	// 	<div>
+	// 		<h1>Hello Ning</h1>
+	// 		<img src='/pic2.png' style='width:500px;'>
+	// 		<form action='/signOut' method='post'>
+	// 		<button>Sign Out</button>
+	// 		</form>
+	// 	</div>
+	// 	`;
+	// 	res.send(html);
 });
 
 app.post('/loggingin', async (req,res) => {
@@ -242,54 +287,99 @@ app.get('/logout', (req,res) => {
     res.send(html);
 });
 
+app.get('/pic/:id', (req, res) => {
 
-app.get('/pic/:id', (req,res) => {
-
-    var pic = req.params.id;
-
-    if (pic == 1) {
-        // 
-		var html = `
-    <div>
-		<h1>Hello Ning</h1>
-        <img src='/pic1.png' style='width:500px;'>
-        <form action='/signOut' method='post'>
-        <button>Sign Out</button>
-        </form>
-    </div>
-    `;
-    res.send(html);
-    }
-    else if (pic == 2) {
-        // res.send("pic2: <img src='/pic2.png' style='width:500px;'>");
-		var html = `
+	var pic = req.params.id;
+	
+	// Generate a random number between 1 and 3
+	var randomNum = Math.floor(Math.random() * 3) + 1;
+  
+	if (pic == 1 || randomNum == 1) {
+	  var html = `
 		<div>
-			<h1>Hello Ning</h1>
-			<img src='/pic2.png' style='width:500px;'>
-			<form action='/signOut' method='post'>
+		  <h1>Hello Ning</h1>
+		  <img src='/pic1.png' style='width:500px;'>
+		  <form action='/signOut' method='post'>
 			<button>Sign Out</button>
-			</form>
+		  </form>
 		</div>
-		`;
-		res.send(html);
-    }
-	else if (pic == 3) {
-		// res.send("pic3: <img src='/pic3.png' style='width:500px;'>");
-		var html = `
+	  `;
+	  res.send(html);
+	} else if (pic == 2 || randomNum == 2) {
+	  var html = `
 		<div>
-			<h1>Hello Ning</h1>
-			<img src='/pic3.png' style='width:500px;'>
-			<form action='/signOut' method='post'>
+		  <h1>Hello Ning</h1>
+		  <img src='/pic2.png' style='width:500px;'>
+		  <form action='/signOut' method='post'>
 			<button>Sign Out</button>
-			</form>
+		  </form>
 		</div>
-		`;
-		res.send(html);
+	  `;
+	  res.send(html);
+	} else if (pic == 3 || randomNum == 3) {
+	  var html = `
+		<div>
+		  <h1>Hello Ning</h1>
+		  <img src='/pic3.png' style='width:500px;'>
+		  <form action='/signOut' method='post'>
+			<button>Sign Out</button>
+		  </form>
+		</div>
+	  `;
+	  res.send(html);
+	} else {
+	  res.send("Invalid pic id: " + pic);
 	}
-    else {
-        res.send("Invalid pic id: "+ pic);
-    }
-});
+  });
+  
+
+// app.get('/pic/:id', (req,res) => {
+
+//     var pic = req.params.id;
+
+//     if (pic == 1) {
+//         // 
+// 		var html = `
+//     <div>
+// 		<h1>Hello Ning</h1>
+//         <img src='/pic1.png' style='width:500px;'>
+//         <form action='/signOut' method='post'>
+//         <button>Sign Out</button>
+//         </form>
+//     </div>
+//     `;
+//     res.send(html);
+//     }
+//     else if (pic == 2) {
+//         // res.send("pic2: <img src='/pic2.png' style='width:500px;'>");
+// 		var html = `
+// 		<div>
+// 			<h1>Hello Ning</h1>
+// 			<img src='/pic2.png' style='width:500px;'>
+// 			<form action='/signOut' method='post'>
+// 			<button>Sign Out</button>
+// 			</form>
+// 		</div>
+// 		`;
+// 		res.send(html);
+//     }
+// 	else if (pic == 3) {
+// 		// res.send("pic3: <img src='/pic3.png' style='width:500px;'>");
+// 		var html = `
+// 		<div>
+// 			<h1>Hello Ning</h1>
+// 			<img src='/pic3.png' style='width:500px;'>
+// 			<form action='/signOut' method='post'>
+// 			<button>Sign Out</button>
+// 			</form>
+// 		</div>
+// 		`;
+// 		res.send(html);
+// 	}
+//     else {
+//         res.send("Invalid pic id: "+ pic);
+//     }
+// });
 
 app.post('/signout', (req, res) => {
 	// clear session and redirect to signup page
